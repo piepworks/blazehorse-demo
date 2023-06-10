@@ -26,4 +26,6 @@ COPY . /code/
 
 EXPOSE 8000
 
-CMD ["/bin/bash", "-c", "npm i; npm run build; python manage.py collectstatic --noinput; python manage.py migrate --noinput; gunicorn --bind :8000 --workers 2 config.wsgi"]
+RUN npm i && npm run build
+
+CMD ["/bin/bash", "-c", "python manage.py collectstatic --noinput; python manage.py migrate --noinput; gunicorn --bind :8000 --workers 2 config.wsgi"]

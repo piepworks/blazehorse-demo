@@ -1,4 +1,4 @@
-FROM python:3.11.3
+FROM python:3.11.4
 
 ENV PYTHONDONTWRITEBYTECODE 1
 ENV PYTHONUNBUFFERED 1
@@ -15,6 +15,10 @@ RUN apt-get update && \
     curl -fsSL https://deb.nodesource.com/setup_18.x | bash && \
     apt-get install -y nodejs
 
+# Install Litestream
+RUN wget https://github.com/benbjohnson/litestream/releases/download/v0.3.8/litestream-v0.3.8-linux-amd64.deb \
+    && dpkg -i litestream-v0.3.8-linux-amd64.deb
+
 COPY requirements/requirements.txt /tmp/requirements.txt
 
 RUN set -ex && \
@@ -28,4 +32,4 @@ EXPOSE 8000
 
 RUN npm i && npm run build
 
-CMD ["/bin/bash", "-c", "python manage.py collectstatic --noinput; python manage.py migrate --noinput; gunicorn --bind :8000 --workers 2 config.wsgi"]
+CMD ["/code/start.sh"]
